@@ -1,15 +1,3 @@
-
-class Button extends React.Component {
-
-  render() {
-    return (
-      <button className="button" onClick={ () => this.props.onClick() }>
-        {this.props.value}
-      </button>
-    );
-  }
-}
-
 class Gistbox extends React.Component {
 
   constructor(props) {
@@ -25,6 +13,8 @@ class Gistbox extends React.Component {
       actualIndexBox: 0,
       actualTitleBox: ''
     };
+    this.buttonTag=[];
+    this.handleClick = this.handleClick.bind(this);
   }
 
   loadData(query) {
@@ -38,6 +28,9 @@ class Gistbox extends React.Component {
         console.log(data);
         this.setState({data: data });
         console.log();
+
+        //this.callBackLoadData();
+        this.handleClick(0);
 
     })
       .catch(err => console.error(this.url, err.toString()))
@@ -58,19 +51,16 @@ class Gistbox extends React.Component {
  
   componentDidMount() {
     this.loadData(this.state.query);
+    
   }
   componentDidUpdate(){
     if(typeof this.codeTag !== 'undefined'){
      Prism.highlightElement(this.codeTag, Prism.languages.javascript);
     }
-
-
-    
   }
 
-  handleClick(i, event) {
-
-    
+  handleClick(i) {
+   
     var actItem;
     for(let item in this.state.data[i].files){
       this.loadRaw(this.state.data[i].files[item].raw_url, i);
@@ -88,8 +78,6 @@ class Gistbox extends React.Component {
     const queries = this.state.queries.slice();
 
     queries[i] = event.target.value;
-
-    //console.log(event.target.value);
     this.setState({queries: queries });
 
   }
@@ -105,10 +93,11 @@ class Gistbox extends React.Component {
   } 
   renderButton(i) {
     return (
-        <Button 
-          value={"more"} 
-          onClick={this.handleClick.bind(this, i)}
-        />
+        <button 
+          ref={(button) => { this.buttonTag[i] = button; }}
+          onClick={this.handleClick.bind(this, i)}>
+          {"more"}
+        </button>
     );
   } 
 

@@ -1,5 +1,5 @@
 @import url("https://fonts.googleapis.com/css?family=Open+Sans");
-@import url("https://fonts.googleapis.com/css?family=Rokkitt:300,400");
+@import url("https://fonts.googleapis.com/css?family=Montserrat:300,400,700");
 code[class*="language-"],
 pre[class*="language-"] {
   color: black;
@@ -111,19 +111,20 @@ pre[class*="language-"] {
 
 /*--- GENERALS ---*/
 body {
-  font-family: "Rokkitt", Arial, sans-serif;
+  font-family: "Montserrat", Arial, sans-serif;
   font-size: 100%;
   -webkit-font-smoothing: antialiased;
   -moz-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -o-font-smoothing: antialiased;
   background: white;
-  color: #373f4c; }
+  color: #373f4c;
+  font-weight: 300; }
 
 /*-- RESET --*/
 button,
 input {
-  font-family: "Rokkitt", Arial, sans-serif; }
+  font-family: "Montserrat", Arial, sans-serif; }
 
 button {
   display: block;
@@ -131,12 +132,17 @@ button {
   -moz-appearance: none;
   text-shadow: none;
   box-shadow: none;
-  background: #196bf1;
+  background: #425cca;
   cursor: pointer;
   border: 0;
   color: white;
   border-radius: 30px;
-  margin: 15px 0; }
+  margin: 15px 0;
+  text-transform: uppercase;
+  height: 30px;
+  line-height: 30px;
+  font-size: 13px;
+  padding: 0 14px; }
   button:focus {
     outline: 0; }
 
@@ -171,10 +177,12 @@ button {
   box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.2); }
 
 .item_active button {
-  background: #567ab4; }
+  display: none; }
 .item_active .item__inner {
-  border-left: 5px solid #196bf1;
-  padding-left: 20px; }
+  border-left: 5px solid #425cca;
+  padding-left: 20px;
+  background: #425cca;
+  color: white; }
 
 .view {
   position: absolute;
@@ -206,14 +214,14 @@ button {
   padding: 20px;
   box-sizing: border-box;
   overflow-x: auto;
-  font-size: 12px;
+  font-size: 0.9em;
   color: #4d4d4d; }
 
 .title {
   display: block;
   padding-right: 20px;
   margin-bottom: 10px;
-  color: #196bf1;
+  color: #425cca;
   font-size: 1.8em;
   line-height: 0.85;
   text-decoration: none;

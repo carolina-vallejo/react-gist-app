@@ -12,6 +12,7 @@ body {
   @include smoothfonts;
   background: white;
   color: $black;
+  font-weight: 300;
 }
 
 
@@ -29,11 +30,16 @@ button {
   text-shadow: none;
   box-shadow: none;
   background: $blue;
-  cursor: pointer;
-  border: 0;
-  color: white;
-  border-radius: 30px;
-  margin: 15px 0;
+cursor: pointer;
+    border: 0;
+    color: white;
+    border-radius: 30px;
+    margin: 15px 0;
+    text-transform: uppercase;
+    height: 30px;
+    line-height: 30px;
+    font-size: 13px;
+    padding: 0 14px;
   &:focus {
     outline: 0;
   }
@@ -66,11 +72,13 @@ button {
 
 .item_active {
   button{
-    background: desaturate($blue, 50%);
+    display: none;
   }
   .item__inner {
     border-left: 5px solid $blue;
     padding-left: 20px;
+    background: $blue;
+    color: white;
   }
 }
 
@@ -107,7 +115,7 @@ button {
   padding: 20px;
   box-sizing: border-box;
   overflow-x: auto;
-  font-size: 12px;
+  font-size: 0.9em;
   color: lighten(black, 30%);
 }
 
