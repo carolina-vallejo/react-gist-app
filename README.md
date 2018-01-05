@@ -1,1 +1,1 @@
-React application for manage gists
+React app to manage Github Gists

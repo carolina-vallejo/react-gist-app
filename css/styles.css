@@ -134,23 +134,28 @@ button {
   box-shadow: none;
   background: #425cca;
   cursor: pointer;
-  border: 0;
+  border: 1px solid #425cca;
   color: white;
   border-radius: 30px;
-  margin: 15px 0;
   text-transform: uppercase;
-  height: 30px;
-  line-height: 30px;
+  height: 28px;
+  line-height: 27px;
   font-size: 13px;
-  padding: 0 14px; }
+  padding: 0 14px;
+  position: absolute;
+  bottom: 0;
+  right: 20px;
+  margin-bottom: 20px; }
   button:focus {
     outline: 0; }
+  button:hover {
+    background: white;
+    color: #425cca; }
 
 .grid {
   list-style: none;
   height: 100%;
-  width: 50%;
-  overflow: auto;
+  width: 30%;
   position: absolute;
   bottom: 0;
   right: 0;
@@ -165,16 +170,22 @@ button {
   flex-direction: row; }
 
 .item {
-  width: 50%;
+  width: 100%;
   box-sizing: border-box;
   padding: 20px; }
 
 .item__inner {
+  position: relative;
   box-sizing: border-box;
   height: 100%;
-  padding: 20px 20px 20px 25px;
+  padding: 20px 20px 65px 25px;
   background: white;
-  box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.2); }
+  box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.2);
+  transition: all 200ms ease-in-out; }
+  .item__inner .title {
+    font-size: 1.3em; }
+  .item__inner .description {
+    font-size: 0.9em; }
 
 .item_active button {
   display: none; }
@@ -183,15 +194,17 @@ button {
   padding-left: 20px;
   background: #425cca;
   color: white; }
+  .item_active .item__inner .title {
+    color: white; }
 
 .view {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 50%;
+  position: fixed;
+  top: 5vh;
+  left: 2.5vw;
+  width: calc(70% - 5vw);
   box-sizing: border-box;
   padding: 20px;
-  height: 100%; }
+  height: calc(100% - 8vh); }
   .view .inner {
     position: relative;
     box-sizing: border-box;
@@ -206,7 +219,7 @@ button {
 .code {
   position: absolute;
   bottom: 40px;
-  height: calc(50% - 40px);
+  height: calc(60% - 40px);
   width: calc(100% - 80px);
   float: right;
   border: 1px solid #f1f1f1;
@@ -223,10 +236,14 @@ button {
   margin-bottom: 10px;
   color: #425cca;
   font-size: 1.8em;
-  line-height: 0.85;
+  line-height: 1;
   text-decoration: none;
   overflow-wrap: break-word;
+  font-weight: 400;
   transition: opacity 200ms ease-in-out; }
+
+.description {
+  font-size: 1.2em; }
 
 .wrapper {
   width: 90vw;
