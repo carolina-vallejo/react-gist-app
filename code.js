@@ -1,3 +1,5 @@
+var FormattedDate = ReactIntl.FormattedDate;
+
 class Gistbox extends React.Component {
 
   constructor(props) {
@@ -6,27 +8,41 @@ class Gistbox extends React.Component {
       data: [],
       datalength: 0,
       file: [undefined], 
+      activeTab:0,
       query : 'd3',
       value : 'java',
       queries: [Array(30).fill('')],
       inputCliked : false,
-      actualIndexBox: 0,
-      actualTitleBox: ''
+      actIndex: 0,
+      languages: []
     };
-    //this.buttonTag=[];
-    //this.handleClick = this.handleClick.bind(this);
   }
 
   loadData(query) {
-    //fetch(`https://api.github.com/users/radiodraws/gists?page=1&per_page=100`)
-    fetch('data/gists.json')
+    fetch(`https://api.github.com/users/radiodraws/gists?page=1&per_page=100`)
+    //fetch('data/gists.json')
       .then(response => response.json())
       .then(data => {
+
+        var arrLangs = [];
+
+        for(let i = 0; i<data.length; i++){
+          var arrFiles = Object.keys(data[i].files);
+          data[i].filesarr = arrFiles.map(function(d){
+            arrLangs.push(data[i].files[d].language);
+           // console.log(data[i].files[d]);
+            return data[i].files[d]
+          });
+        }
+
+        console.log(arrLangs);
+        console.log(_.uniqBy(arrLangs));
 
         this.setState({
           datalength : data.length,
           data: data,
-          file: Array(data.length).fill([undefined])
+          file: Array(data.length).fill([undefined]),
+          languages: _.uniqBy(arrLangs)
         });
 
         this.handleClick(0);
@@ -37,42 +53,41 @@ class Gistbox extends React.Component {
 
   loadRaw(i) {
 
-    //var deep = _.cloneDeep(objects);
+    console.log('AJAX!!');
+    const cloneFile = this.state.file.slice();
+    var keyName = Object.keys( this.state.data[i].files );
+    var arr=[];
+    var fetchCount = 0;
 
-      //const cloneFile = Array(this.state.datalength).fill([]);
-      const cloneFile = _.cloneDeep(this.state.file);
-
-
-
-      var keyName = Object.keys( this.state.data[i].files );
-      var arr=[];
-
-      for(let k=0; k<keyName.length; k++){
+    for(let k=0; k<keyName.length; k++){
 
       fetch(`${this.state.data[i].files[keyName[k]].raw_url}`)
         .then(response => response.text())
         .then(rawfile => {
           
-          arr.push(rawfile);
+          arr.push({
+            fileName : keyName[k],
+            rawfile : rawfile
+          });
 
-          console.log(cloneFile);
-          if(k === keyName.length - 1){
+          fetchCount++;
+
+          if(fetchCount === keyName.length){
+
             cloneFile[i] = arr;
+
             this.setState({
               file: cloneFile,
-              actualTitleBox: keyName[0],
               inputCliked: true,
-              actualIndexBox: i,
+              actIndex: i,
+              activeTab: 0
 
             });            
           }
       })
         .catch(err => console.error(this.url, err.toString()))
-        
-        //console.log(this.state.data[i].files[keyName[k]].raw_url + ' i ' + i + ' k ' + k);
-      }
-    
-
+      
+    }
 
   }  
  
@@ -81,9 +96,6 @@ class Gistbox extends React.Component {
     
   }
   componentDidUpdate(){
-    //console.log('UPDATE: this.state.file');
-    //console.log(this.state.file);
-    //console.log('-------------------->');
 
     if(typeof this.codeTag !== 'undefined'){
      Prism.highlightElement(this.codeTag, Prism.languages.javascript);
@@ -92,21 +104,22 @@ class Gistbox extends React.Component {
 
   handleClick(i) {
 
+    //---OJO REVISAR ESTO DA ERROR EN FLIP!
 
     if(typeof this.state.file[i][0] === 'undefined'){
       this.loadRaw(i);
+      console.log('is load raw!')
 
     }else{
       this.setState({
-        
+        activeTab: 0,
         inputCliked: true,
-        actualIndexBox: i,
+        actIndex: i,
 
       });      
+
+      console.log('is NOT loadraw!')
     }
-    
-
-
 
   } 
 
@@ -116,6 +129,14 @@ class Gistbox extends React.Component {
     queries[i] = event.target.value;
     this.setState({queries: queries });
 
+  }
+
+  handleTabClick(i, event) {
+    if(i !== this.state.activeTab){
+      this.setState({
+        activeTab: i
+      });      
+    }
   }
 
   renderInput(i) {
@@ -130,35 +151,23 @@ class Gistbox extends React.Component {
   renderButton(i) {
     return (
         <button 
-         // ref={(button) => { this.buttonTag[i] = button; }}
           onClick={this.handleClick.bind(this, i)}>
           {"view"}
         </button>
     );
   } 
 
-  renderPre(i, item) {
+  renderPre(item) {
     return (
-      <div className="code">
-          <pre>
-            <code key={'input'+i} ref={(code) => { this.codeTag = code; }} id="rawcode" className="language-javascript">
-            {
-              //console.log(this.state.file)
-              item
-            }
-            </code>
-          </pre>
-      </div>
+      <pre>
+        <code ref={(code) => { this.codeTag = code; }} className="language-javascript">
+        {item}
+        </code>
+      </pre>
     );
   }        
 
   render() {
-    var index = this.state.actualIndexBox;
-    var title = this.state.actualTitleBox;
-
-    //---OJO VER CUANDO SE RENDERIZA Y PORQUE?
-    console.log('render!!');
-
     return (
         <div className="wrapper">
           <div className='view'>
@@ -167,21 +176,57 @@ class Gistbox extends React.Component {
     
               <div className="inner">
                 <div className="info">
-                  <div className="title">{title}</div>
-                  <div className="description">{this.state.data[index].description}</div>
-                </div>
-                {
-                  //console.log(this.state.file[index])
-                  this.renderPre(index, this.state.file[index])
-                  /*
-                  this.state.file[index].map((item) => {
-                    
-                  //  
-                  })
-                  */
+                  <div className="info__lang">
+                  {
+                    this.state.data[this.state.actIndex].filesarr.map((item, i)=>{
 
-                }
-             </div>
+                      return <span key={'lang-item-' + i}>
+                        {
+                          item.language + (i===this.state.data[this.state.actIndex].filesarr.length - 1 ? '' : ', ')
+                        }
+                      </span>
+                      
+                    })
+
+                  }
+
+                  </div>
+                  <div className="info__title">
+                  {this.state.data[this.state.actIndex].description}
+                  </div>
+                  <div className="info__date">
+                    {"Created at "}
+                    <FormattedDate
+                      value={this.state.data[this.state.actIndex].updated_at}
+                      day="numeric"
+                      month="long"
+                      year="numeric" />
+                  </div>              
+                </div>
+                <div className="code">
+                  <div className="code__nav">
+                    {
+                      this.state.file[this.state.actIndex].map((item, i) => {
+                        //console.log(item);
+                        return <span 
+                          onClick={this.handleTabClick.bind(this, i)}
+                          className={`code__nav__item ${i === this.state.activeTab ? 'code__nav__item_active' : ''}`}
+                          key={'nav-item-' + i}>
+                          {item.fileName}
+                        </span>
+                      })
+                    }    
+                  </div> 
+                  <div className="code__tabs">
+                    <div 
+                      className="code__tabs__source"> 
+                      {
+                        this.renderPre(this.state.file[this.state.actIndex][this.state.activeTab].rawfile)
+                      }
+                    </div>
+                  </div>
+                </div>
+              </div>
 
               :
   
@@ -192,7 +237,7 @@ class Gistbox extends React.Component {
           <div className='grid'>
             { this.state.data.map((item, i) => {
 
-              return <div key={item.id} className={`item ${i === index ? 'item_active' : 'item_inactive'}`}>
+              return <div key={item.id} className={`item ${i === this.state.actIndex ? 'item_active' : 'item_inactive'}`}>
                 <div className="item__inner">
                   <div className="title">{Object.keys(item.files)[0]}</div>
                   <div className="description">{item.description}</div>

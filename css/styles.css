@@ -118,7 +118,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   -o-font-smoothing: antialiased;
   background: white;
-  color: #373f4c;
+  color: #525e74;
   font-weight: 300; }
 
 /*-- RESET --*/
@@ -211,30 +211,21 @@ button {
     padding: 40px;
     height: 100%;
     background: white;
-    box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.2); }
-
-.info {
-  float: left; }
-
-.code {
-  position: absolute;
-  bottom: 40px;
-  height: calc(60% - 40px);
-  width: calc(100% - 80px);
-  float: right;
-  border: 1px solid #f1f1f1;
-  background: rgba(241, 241, 241, 0.5);
-  padding: 20px;
-  box-sizing: border-box;
-  overflow-x: auto;
-  font-size: 0.9em;
-  color: #4d4d4d; }
+    box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.2);
+    display: grid;
+    grid-template-columns: 100%;
+    grid-template-rows: auto 1fr;
+    grid-column-gap: 0;
+    grid-row-gap: 20px;
+    justify-items: stretch;
+    -webkit-box-align: stretch;
+    -ms-flex-align: stretch;
+    align-items: stretch; }
 
 .title {
   display: block;
   padding-right: 20px;
   margin-bottom: 10px;
-  color: #425cca;
   font-size: 1.8em;
   line-height: 1;
   text-decoration: none;
@@ -242,13 +233,53 @@ button {
   font-weight: 400;
   transition: opacity 200ms ease-in-out; }
 
-.description {
-  font-size: 1.2em; }
-
 .wrapper {
   width: 90vw;
   height: 90vh;
   position: relative;
   margin: 5vh auto 0 auto; }
+
+/*--- info --*/
+.info {
+  padding-bottom: 10%; }
+  .info__title {
+    font-size: 1.5em;
+    font-weight: 700; }
+  .info__date {
+    font-size: 0.9em;
+    color: #a2abbd; }
+
+/*--- CODE --*/
+.code {
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+  font-size: 0.9em;
+  display: grid;
+  grid-template-columns: 100%;
+  grid-template-rows: auto 1fr;
+  grid-column-gap: 0;
+  grid-row-gap: 0;
+  justify-items: stretch;
+  -webkit-box-align: stretch;
+  -ms-flex-align: stretch;
+  align-items: stretch; }
+  .code__tabs {
+    padding: 20px;
+    overflow-x: auto;
+    border: 1px solid #dee1e7;
+    background: #fbfcfd; }
+  .code__nav__item {
+    display: inline-block;
+    margin: 0 5px 10px 0;
+    padding: 5px 20px;
+    border: 1px solid #edeef2;
+    background: #edeef2;
+    cursor: pointer; }
+    .code__nav__item_active {
+      cursor: default;
+      background: white;
+      border: 1px solid #a2abbd; }
 
 /*# sourceMappingURL=styles.css.map */
