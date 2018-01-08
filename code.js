@@ -9,12 +9,11 @@ class Gistbox extends React.Component {
       datalength: 0,
       file: [undefined], 
       activeTab:0,
-      query : 'd3',
-      value : 'java',
       queries: [Array(30).fill('')],
       inputCliked : false,
       actIndex: 0,
-      languages: []
+      languages: [],
+      dataFiltered: []
     };
   }
 
@@ -34,15 +33,16 @@ class Gistbox extends React.Component {
             return data[i].files[d]
           });
         }
-
-        console.log(arrLangs);
-        console.log(_.uniqBy(arrLangs));
+        console.log(data);
+        //console.log(arrLangs);
+        //console.log(_.uniqBy(arrLangs));
 
         this.setState({
           datalength : data.length,
           data: data,
           file: Array(data.length).fill([undefined]),
-          languages: _.uniqBy(arrLangs)
+          languages: _.uniqBy(arrLangs),
+          dataFiltered: data
         });
 
         this.handleClick(0);
@@ -90,6 +90,18 @@ class Gistbox extends React.Component {
     }
 
   }  
+
+  filterList(event){
+    var updatedList = this.state.data;
+    updatedList = updatedList.filter(function(item){
+
+      return item.description.toLowerCase().search(
+        event.target.value.toLowerCase()) !== -1;
+    });
+
+
+    this.setState({dataFiltered: updatedList});
+  }
  
   componentDidMount() {
     this.loadData(this.state.query);
@@ -139,13 +151,16 @@ class Gistbox extends React.Component {
     }
   }
 
-  renderInput(i) {
+  renderInput() {
     return (
-      <input 
+      <div className="search">
+      <input
+        placeholder="Search"
+        className="search__input"
         type="text" 
-        value={this.state.queries[i]} 
-        onChange={this.handleChange.bind(this, i)} 
-      />  
+        onChange={this.filterList.bind(this)} 
+      />
+      </div>  
     );
   } 
   renderButton(i) {
@@ -178,11 +193,11 @@ class Gistbox extends React.Component {
                 <div className="info">
                   <div className="info__lang">
                   {
-                    this.state.data[this.state.actIndex].filesarr.map((item, i)=>{
+                    this.state.dataFiltered[this.state.actIndex].filesarr.map((item, i)=>{
 
                       return <span key={'lang-item-' + i}>
                         {
-                          item.language + (i===this.state.data[this.state.actIndex].filesarr.length - 1 ? '' : ', ')
+                          item.language + (i===this.state.dataFiltered[this.state.actIndex].filesarr.length - 1 ? '' : ', ')
                         }
                       </span>
                       
@@ -192,12 +207,12 @@ class Gistbox extends React.Component {
 
                   </div>
                   <div className="info__title">
-                  {this.state.data[this.state.actIndex].description}
+                  {this.state.dataFiltered[this.state.actIndex].description}
                   </div>
                   <div className="info__date">
                     {"Created at "}
                     <FormattedDate
-                      value={this.state.data[this.state.actIndex].updated_at}
+                      value={this.state.dataFiltered[this.state.actIndex].updated_at}
                       day="numeric"
                       month="long"
                       year="numeric" />
@@ -234,8 +249,11 @@ class Gistbox extends React.Component {
             }
     
           </div>
+
           <div className='grid'>
-            { this.state.data.map((item, i) => {
+
+            {this.renderInput()}
+            { this.state.dataFiltered.map((item, i) => {
 
               return <div key={item.id} className={`item ${i === this.state.actIndex ? 'item_active' : 'item_inactive'}`}>
                 <div className="item__inner">
